@@ -1,4 +1,4 @@
-package com.ers.code.test.exception;
+package com.ers.code.exception;
 
 public class EmployeeNotFoundException extends RuntimeException
 {

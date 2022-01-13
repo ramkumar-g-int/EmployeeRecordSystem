@@ -1,4 +1,4 @@
-package com.ers.code.test.config;
+package com.ers.code.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories("com.ers.code.test")
+@EnableJpaRepositories("com.ers.code")
 public class DataSourceConfiguration
 {
   @Bean
@@ -45,7 +45,7 @@ public class DataSourceConfiguration
     LocalContainerEntityManagerFactoryBean lemfb = new LocalContainerEntityManagerFactoryBean();
     lemfb.setDataSource(dataSource());
     lemfb.setJpaVendorAdapter(jpaVendorAdapter());
-    lemfb.setPackagesToScan("com.ers.code.test.model");
+    lemfb.setPackagesToScan("com.ers.code.model");
     return lemfb;
   }
 }

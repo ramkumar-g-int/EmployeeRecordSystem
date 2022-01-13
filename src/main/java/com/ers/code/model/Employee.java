@@ -1,4 +1,4 @@
-package com.ers.code.test.model;
+package com.ers.code.model;
 
 import lombok.Data;
 

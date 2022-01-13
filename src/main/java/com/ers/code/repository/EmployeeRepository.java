@@ -1,6 +1,6 @@
-package com.ers.code.test.repository;
+package com.ers.code.repository;
 
-import com.ers.code.test.model.Employee;
+import com.ers.code.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,8 +1,8 @@
-package com.ers.code.test.controller;
+package com.ers.code.controller;
 
-import com.ers.code.test.exception.EmployeeNotFoundException;
-import com.ers.code.test.model.Employee;
-import com.ers.code.test.service.EmployeeService;
+import com.ers.code.exception.EmployeeNotFoundException;
+import com.ers.code.model.Employee;
+import com.ers.code.service.EmployeeService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

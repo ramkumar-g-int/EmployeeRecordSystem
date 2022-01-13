@@ -1,7 +1,7 @@
-package com.ers.code.test.service;
+package com.ers.code.service;
 
-import com.ers.code.test.model.Employee;
-import com.ers.code.test.repository.EmployeeRepository;
+import com.ers.code.model.Employee;
+import com.ers.code.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
