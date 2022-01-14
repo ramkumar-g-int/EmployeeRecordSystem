@@ -5,9 +5,14 @@ import com.ers.code.model.Employee;
 import com.ers.code.service.EmployeeService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -24,13 +30,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employeerecordsystem")
+@Api(value = "employerecordsystem")
 public class EmployeeController
 {
   @Autowired
   EmployeeService employeeService;
   private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
-  @GetMapping("/employees")
+  @ApiOperation(value = "View a list of employees", response = Iterable.class)
+  @ApiResponses(value = {
+          @ApiResponse(code = 200, message = "Successfully retrieved list"),
+          @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+          @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+          @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+  }
+  )
+  @RequestMapping(value = "/employees", method = RequestMethod.GET, produces = "application/json")
   public ResponseEntity getEmployees() throws EmployeeNotFoundException
   {
     logger.info("## Enter : Retrieve Employee ##");
@@ -41,7 +56,8 @@ public class EmployeeController
             .body(employeeList));
   }
 
-  @PostMapping(value = "/createemployee")
+  @ApiOperation(value = "Create new employee")
+  @RequestMapping(value = "/createemployee", method = RequestMethod.POST, produces = "application/json")
   public ResponseEntity createEmployee(@RequestBody String json) throws IOException, EmployeeNotFoundException
   {
     try
@@ -79,7 +95,8 @@ public class EmployeeController
             .body("Employee record is created successfully ");
   }
 
-  @PutMapping(value = "/update/{id}")
+  @ApiOperation(value = "Update Employee")
+  @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
   public ResponseEntity updateEmployee(@PathVariable Integer id, @RequestBody String json) throws EmployeeNotFoundException
   {
     try
@@ -109,17 +126,26 @@ public class EmployeeController
     logger.info("## Exit : Update Employee ##");
     return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION)
-            .body("EmployeeID " + id + " record is updated successfully !!!");
+            .body("EmployeeID " + id + " is updated successfully !!!");
   }
 
 
-  @DeleteMapping("/delete/{id}")
+  @ApiOperation(value = "Delete Employee")
+  @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+
   public ResponseEntity deleteEmployee(@PathVariable Integer id) throws EmployeeNotFoundException
   {
     try
     {
       logger.info("## Enter : Delete Employee ##");
       employeeService.deleteEmployee(id);
+    }
+    catch (DataIntegrityViolationException de)
+    {
+      logger.info("## Exit : Delete Employee ##");
+      return ResponseEntity.unprocessableEntity()
+              .header(HttpHeaders.CONTENT_DISPOSITION)
+              .body("Unable to Delete EmployeeID " + id + " due to" + de.getMessage());
     }
     catch (Exception e)
     {
@@ -130,6 +156,4 @@ public class EmployeeController
             .header(HttpHeaders.CONTENT_DISPOSITION)
             .body("EmployeeID " + id + " is deleted successfully ");
   }
-
-
 }
